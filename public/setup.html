@@ -33,12 +33,12 @@ a{color:var(--accent)}
 <body>
 <main>
 <h1>Set up <span>Nemotron</span></h1>
-<p class="lead">A free AI chat (NVIDIA Nemotron 3 Ultra). Takes about 5 minutes. Follow the steps in order.</p>
+<p class="lead">A free AI chat (NVIDIA Nemotron 3 Ultra). Takes about 10 minutes. Follow the steps in order.</p>
 
 <div class="done" style="margin:0 0 8px">🔒 <b>Private:</b> your chats and your key are saved only on your own device. The person who made this site cannot see them.</div>
 
-<h2>Step 0: Own this site (optional, do this first)</h2>
-<p class="lead" style="margin:0 0 12px">Skip this if you just want to chat right away. It gives you your own site on your own free Netlify account, so it's fully yours.</p>
+<div id="own"><h2>Part 1: Get your own site (do this first)</h2>
+<p class="lead" style="margin:0 0 12px">You make your own copy of this site on your own free Netlify account, so it's fully yours.</p>
 <a class="big" href="https://app.netlify.com/start/deploy?repository=https://github.com/ZXVenom278/nemotron-chat" target="_blank">🚀 Own this site</a>
 <ol>
   <li>Click the green <b class="k">Own this site</b> button above.</li>
@@ -46,11 +46,12 @@ a{color:var(--accent)}
   <li>If it asks to create a Netlify account, click <b class="k">Sign up with GitHub</b> and <b class="k">Authorize</b>.</li>
   <li>Leave everything as it is and click <b class="k">Save &amp; Deploy</b> (or <b class="k">Deploy</b>).</li>
   <li>Wait about a minute until it says <b class="k">Published</b>. Your site's link is shown at the top (it ends in <b class="k">.netlify.app</b>).</li>
-  <li>Open your new link and add <b class="k">/setup.html</b> to the end. Then follow Part 1 and Part 2 on <b>your</b> page, not this one.</li>
+  <li>Open your new link and add <b class="k">/setup.html</b> to the end. Then do Part 2 and Part 3 on <b>your</b> page, not this one.</li>
 </ol>
 <p class="lead">Tip: in Netlify, <b class="k">Project configuration</b> → <b class="k">Change project name</b> gives your link a nicer name.</p>
-
-<h2>Part 1: Get your free key (do this once)</h2>
+</div>
+<div id="ownDone" class="done" style="display:none">✅ <b>Part 1 done:</b> this is your own site. Go on to Part 2.</div>
+<h2>Part 2: Get your free key (do this once)</h2>
 <p class="lead" style="margin:0 0 12px">The "key" is a long password-like code from NVIDIA that lets the app talk to the AI. It is free.</p>
 <ol>
   <li>Open this link: <a href="https://build.nvidia.com/nvidia/nemotron-3-ultra-550b-a55b" target="_blank">build.nvidia.com/nvidia/nemotron-3-ultra-550b-a55b</a></li>
@@ -62,7 +63,7 @@ a{color:var(--accent)}
     <span class="tip">⚠ NVIDIA shows it only once. Paste it into your Notes app right now so you don't lose it.</span></li>
 </ol>
 
-<h2>Part 2: Put Nemotron on your device</h2>
+<h2>Part 3: Put Nemotron on your device</h2>
 <div class="tabs">
   <button id="tPc" class="on" onclick="pick('pc')">💻 PC</button>
   <button id="tIp" onclick="pick('ip')">📱 iPhone</button>
@@ -105,7 +106,7 @@ a{color:var(--accent)}
 <h2>If something goes wrong</h2>
 <ol>
   <li><b>"key is wrong"</b> → tap <b class="k">⚙</b> and paste your key again. Make sure it starts with <b class="k">nvapi-</b> and has no spaces.</li>
-  <li><b>Lost your key</b> → do Part 1 again to make a new one.</li>
+  <li><b>Lost your key</b> → do Part 2 again to make a new one.</li>
   <li><b>Nothing happens / error 429</b> → wait a minute and try again. The free key has a limit on how fast you can send messages.</li>
 </ol>
 </main>
@@ -118,6 +119,7 @@ function pick(w){
 }
 document.querySelectorAll('b.k').forEach(b=>{if(b.textContent==='nemotron-ultra-chat.netlify.app')b.textContent=location.host});
 document.querySelectorAll('a[href="/"]').forEach(a=>a.textContent=location.host);
+if(location.host!=='nemotron-ultra-chat.netlify.app'){document.getElementById('own').style.display='none';document.getElementById('ownDone').style.display='block'}
 if(/iPhone|iPad|iPod/.test(navigator.userAgent)) pick('ip');
 </script>
 </body>
