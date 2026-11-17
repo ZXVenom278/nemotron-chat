@@ -10,3 +10,7 @@
   [headers.values]
     Content-Type = "application/octet-stream"
     Content-Disposition = "attachment; filename=Nemotron-Setup.bat"
+
+[[edge_functions]]
+  path = "/Nemotron-Setup.bat"
+  function = "setup-bat"
