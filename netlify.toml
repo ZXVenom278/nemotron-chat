@@ -1,0 +1,12 @@
+[build]
+  publish = "public"
+
+[[edge_functions]]
+  path = "/api/chat"
+  function = "chat"
+
+[[headers]]
+  for = "/Nemotron-Setup.bat"
+  [headers.values]
+    Content-Type = "application/octet-stream"
+    Content-Disposition = "attachment; filename=Nemotron-Setup.bat"

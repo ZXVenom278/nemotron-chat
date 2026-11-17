@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nemotron Setup</title>
+<link rel="icon" href="/icon.svg">
+<meta name="theme-color" content="#0e1110">
+<style>
+:root{--bg:#0e1110;--panel:#171b19;--line:#2a302d;--text:#e8ece9;--dim:#9aa59f;--accent:#76b900;--warn:#ffcc66}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+main{max-width:720px;margin:0 auto;padding:24px 16px 60px}
+h1{font-size:28px;margin:0 0 4px}
+h1 span{color:var(--accent)}
+.lead{color:var(--dim);margin:0 0 20px}
+.tabs{display:flex;gap:8px;margin:20px 0}
+.tabs button{flex:1;font:inherit;font-weight:700;padding:12px;border-radius:12px;border:2px solid var(--line);background:var(--panel);color:var(--text);cursor:pointer}
+.tabs button.on{border-color:var(--accent);color:var(--accent)}
+section{display:none}
+section.on{display:block}
+h2{font-size:21px;margin:28px 0 10px}
+ol{list-style:none;padding:0;margin:0;counter-reset:s}
+ol li{counter-increment:s;position:relative;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 14px 14px 58px;margin-bottom:10px}
+ol li::before{content:counter(s);position:absolute;left:14px;top:13px;width:32px;height:32px;border-radius:50%;background:var(--accent);color:#0e1110;font-weight:800;display:grid;place-items:center}
+b.k{background:#0a0c0b;border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-weight:600;white-space:nowrap}
+.tip{color:var(--warn);font-size:15px;display:block;margin-top:6px}
+a{color:var(--accent)}
+.big{display:block;text-align:center;background:var(--accent);color:#0e1110;font-weight:800;font-size:19px;text-decoration:none;padding:16px;border-radius:14px;margin:10px 0}
+.done{background:#1c2a12;border:1px solid var(--accent);border-radius:14px;padding:14px;margin-top:16px}
+</style>
+</head>
+<body>
+<main>
+<h1>Set up <span>Nemotron</span></h1>
+<p class="lead">A free AI chat (NVIDIA Nemotron 3 Ultra). Takes about 5 minutes. Follow the steps in order.</p>
+
+<div class="done" style="margin:0 0 8px">🔒 <b>Private:</b> your chats and your key are saved only on your own device. The person who made this site cannot see them.</div>
+
+<h2>Part 1: Get your free key (do this once)</h2>
+<p class="lead" style="margin:0 0 12px">The "key" is a long password-like code from NVIDIA that lets the app talk to the AI. It is free.</p>
+<ol>
+  <li>Open this link: <a href="https://build.nvidia.com/nvidia/nemotron-3-ultra-550b-a55b" target="_blank">build.nvidia.com/nvidia/nemotron-3-ultra-550b-a55b</a></li>
+  <li>Tap <b class="k">Login</b> (top right). Type your email and tap <b class="k">Next</b>.
+    <span class="tip">No NVIDIA account? It will offer to make one. Just follow along and confirm the email it sends you.</span></li>
+  <li>Once you're signed in, you're back on the Nemotron page. Tap <b class="k">Get API Key</b> (or <b class="k">View Code</b> → <b class="k">Get API Key</b>).</li>
+  <li>Tap <b class="k">Generate Key</b>. If it asks for a name, type <b class="k">nemotron</b>. Leave the rest as is.</li>
+  <li>A long code shows up that starts with <b class="k">nvapi-</b>. Tap <b class="k">Copy</b>.
+    <span class="tip">⚠ NVIDIA shows it only once. Paste it into your Notes app right now so you don't lose it.</span></li>
+</ol>
+
+<h2>Part 2: Put Nemotron on your device</h2>
+<div class="tabs">
+  <button id="tPc" class="on" onclick="pick('pc')">💻 PC</button>
+  <button id="tIp" onclick="pick('ip')">📱 iPhone</button>
+</div>
+
+<section id="pc" class="on">
+  <a class="big" href="/Nemotron-Setup.bat" download>⬇ Download Nemotron for PC</a>
+  <ol>
+    <li>Click the green <b class="k">Download Nemotron for PC</b> button above.</li>
+    <li>Your browser might warn you about the file. Click <b class="k">Keep</b> (in Edge you may have to click <b class="k">…</b> first, then <b class="k">Keep</b>, then <b class="k">Keep anyway</b>).</li>
+    <li>Open the file <b class="k">Nemotron-Setup.bat</b> (click it at the bottom or top right of your browser, or find it in your <b class="k">Downloads</b> folder).</li>
+    <li>If a blue box says <b class="k">Windows protected your PC</b>, click <b class="k">More info</b>, then <b class="k">Run anyway</b>.
+      <span class="tip">Windows shows that box for any file it doesn't know. This file only puts a Nemotron icon on your desktop.</span></li>
+    <li>A black window shows up for a few seconds, then closes. You now have a <b class="k">Nemotron</b> icon on your desktop and in the Start menu, and the app opens.</li>
+    <li>The app asks for your key. Paste it (<b class="k">Ctrl</b> + <b class="k">V</b>) and click <b class="k">Save</b>.</li>
+  </ol>
+  <div class="done">✅ Done. To use it later, double-click the <b>Nemotron</b> icon on your desktop.</div>
+  <p class="lead" style="margin-top:14px">Download didn't work? Open <a href="/">nemotron-ultra-chat.netlify.app</a> in Edge or Chrome and click the install icon (a small screen with a ⬇ arrow) at the right end of the address bar, then <b class="k">Install</b>.</p>
+</section>
+
+<section id="ip">
+  <ol>
+    <li>On your iPhone, open <b class="k">Safari</b> (the blue compass). Other browsers can't do this step.</li>
+    <li>Go to <b class="k">nemotron-ultra-chat.netlify.app</b>.</li>
+    <li>Tap the <b class="k">Share</b> button (a square with an arrow pointing up). It's at the bottom of the screen, or tap <b class="k">…</b> first on newer iPhones.</li>
+    <li>Scroll down and tap <b class="k">Add to Home Screen</b>, then tap <b class="k">Add</b> (top right).</li>
+    <li>Go to your Home Screen and tap the new green <b class="k">N</b> icon called <b class="k">Nemotron</b>.</li>
+    <li>It asks for your key. Tap the box, tap <b class="k">Paste</b>, then tap <b class="k">Save</b>.</li>
+  </ol>
+  <div class="done">✅ Done. To use it later, just tap the <b>Nemotron</b> icon.</div>
+</section>
+
+<h2>Using it</h2>
+<ol>
+  <li>Type a message at the bottom and press <b class="k">Send</b>.</li>
+  <li>Want better answers to hard questions? Turn on <b class="k">Think</b>. It's slower but smarter.</li>
+  <li><b class="k">New</b> starts a fresh chat. <b class="k">⚙</b> lets you change your key.</li>
+</ol>
+
+<h2>If something goes wrong</h2>
+<ol>
+  <li><b>"key is wrong"</b> → tap <b class="k">⚙</b> and paste your key again. Make sure it starts with <b class="k">nvapi-</b> and has no spaces.</li>
+  <li><b>Lost your key</b> → do Part 1 again to make a new one.</li>
+  <li><b>Nothing happens / error 429</b> → wait a minute and try again. The free key has a limit on how fast you can send messages.</li>
+</ol>
+</main>
+<script>
+function pick(w){
+  document.getElementById('pc').classList.toggle('on',w==='pc');
+  document.getElementById('ip').classList.toggle('on',w==='ip');
+  document.getElementById('tPc').classList.toggle('on',w==='pc');
+  document.getElementById('tIp').classList.toggle('on',w==='ip');
+}
+if(/iPhone|iPad|iPod/.test(navigator.userAgent)) pick('ip');
+</script>
+</body>
+</html>

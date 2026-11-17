@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<title>Nemotron Chat</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icon.svg">
+<link rel="apple-touch-icon" href="/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Nemotron">
+<meta name="theme-color" content="#0e1110">
+<style>
+:root{--bg:#0e1110;--panel:#171b19;--line:#2a302d;--text:#e8ece9;--dim:#8b958f;--accent:#76b900;--me:#24301a}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+body{display:flex;flex-direction:column;height:100dvh;padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left)}
+header{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--line)}
+header b{flex:1;font-size:17px}
+header b span{color:var(--accent)}
+button{font:inherit;color:var(--text);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 12px;cursor:pointer}
+label.t{font-size:14px;color:var(--dim);display:flex;gap:6px;align-items:center}
+#log{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;max-width:860px;width:100%;margin:0 auto}
+.m{padding:10px 14px;border-radius:14px;max-width:88%;white-space:pre-wrap;word-wrap:break-word}
+.u{align-self:flex-end;background:var(--me)}
+.a{align-self:flex-start;background:var(--panel);border:1px solid var(--line)}
+.a pre{background:#0a0c0b;padding:10px;border-radius:8px;overflow-x:auto;white-space:pre;margin:6px 0}
+.think{color:var(--dim);font-size:14px;border-left:2px solid var(--line);padding-left:8px;margin-bottom:6px}
+.err{color:#ff8a7a}
+.empty{margin:auto;text-align:center;color:var(--dim)}
+form#f{display:flex;gap:8px;padding:10px 16px calc(56px + env(safe-area-inset-bottom));border-top:1px solid var(--line);max-width:860px;width:100%;margin:0 auto}
+textarea{flex:1;resize:none;font:inherit;font-size:16px;color:var(--text);background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 12px;max-height:40vh}
+#send{background:var(--accent);color:#0e1110;font-weight:700;border:none;border-radius:14px;padding:0 18px}
+#send:disabled{opacity:.5}
+dialog{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:14px;max-width:340px}
+dialog input{width:100%;font:inherit;font-size:16px;padding:8px;margin:10px 0;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--text)}
+</style>
+</head>
+<body>
+<header>
+  <b>Nemotron <span>3 Ultra</span></b>
+  <label class="t"><input type="checkbox" id="think"> Think</label>
+  <button id="clear" title="New chat">New</button>
+  <button id="gear" title="Settings">⚙</button>
+</header>
+<div id="log"></div>
+<form id="f">
+  <textarea id="q" rows="1" placeholder="Message Nemotron…" enterkeyhint="send"></textarea>
+  <button id="send">Send</button>
+</form>
+<dialog id="keyDlg"><form method="dialog">
+  <div style="font-weight:700;font-size:18px">Paste your NVIDIA key</div>
+  <div style="color:var(--dim);font-size:14px;margin-top:6px">It starts with <b>nvapi-</b>. It stays on this device only.<br>
+  Don't have one? <a href="/setup.html" target="_blank" style="color:var(--accent)">Step-by-step help</a> (free, 2 minutes).</div>
+  <input id="keyIn" type="password" autocomplete="off" placeholder="nvapi-...">
+  <button style="background:var(--accent);color:#0e1110;font-weight:700;border:none;width:100%;padding:10px">Save</button>
+</form></dialog>
+<script>
+const $=s=>document.querySelector(s), log=$("#log"), q=$("#q"), send=$("#send");
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
+let msgs=store.get("msgs",[]); $("#think").checked=store.get("think",false);
+$("#think").onchange=e=>store.set("think",e.target.checked);
+
+function el(tag,cls,text){const n=document.createElement(tag);if(cls)n.className=cls;if(text!=null)n.textContent=text;return n}
+function showEmpty(){log.replaceChildren();const e=el("div","empty","Ask anything.");e.id="empty";log.appendChild(e)}
+// Render text safely: ``` fenced blocks become <pre>, everything else is plain text.
+function render(node,answer,reasoning){
+  node.replaceChildren();
+  if(reasoning) node.appendChild(el("div","think",reasoning));
+  const parts=(answer||"…").split(/```[\w-]*\n?/);
+  parts.forEach((p,i)=>node.appendChild(i%2? el("pre",null,p) : document.createTextNode(p)));
+}
+function bubble(role,text){
+  $("#empty")?.remove();
+  const d=el("div","m "+(role==="user"?"u":"a"));
+  if(role==="user") d.textContent=text; else render(d,text);
+  log.appendChild(d); log.scrollTop=log.scrollHeight; return d;
+}
+if(msgs.length) msgs.forEach(m=>bubble(m.role,m.content)); else showEmpty();
+
+$("#clear").onclick=()=>{msgs=[];store.set("msgs",msgs);showEmpty()};
+q.addEventListener("input",()=>{q.style.height="auto";q.style.height=q.scrollHeight+"px"});
+q.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey&&!matchMedia("(pointer:coarse)").matches){e.preventDefault();$("#f").requestSubmit()}});
+
+function askKey(){return new Promise(r=>{const d=$("#keyDlg");$("#keyIn").value=store.get("key","");d.showModal();d.addEventListener("close",()=>{store.set("key",$("#keyIn").value.trim());r()},{once:true})})}
+$("#gear").onclick=()=>askKey();
+if(!store.get("key","")) askKey();
+
+$("#f").onsubmit=async e=>{
+  e.preventDefault(); const text=q.value.trim(); if(!text||send.disabled)return;
+  q.value="";q.style.height="auto"; msgs.push({role:"user",content:text}); store.set("msgs",msgs); bubble("user",text);
+  send.disabled=true; const out=bubble("assistant","…");
+  try{
+    let res;
+    for(let tries=0;tries<3;tries++){
+      res=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json","x-nvidia-key":store.get("key","")},
+        body:JSON.stringify({messages:msgs,thinking:$("#think").checked})});
+      if(res.status!==401)break; await askKey();
+    }
+    if(!res.ok) throw new Error(await res.text());
+    const reader=res.body.getReader(), dec=new TextDecoder(); let buf="",answer="",reasoning="";
+    for(;;){
+      const {value,done}=await reader.read(); if(done)break;
+      buf+=dec.decode(value,{stream:true}); const lines=buf.split("\n"); buf=lines.pop();
+      for(const l of lines){
+        if(!l.startsWith("data:"))continue; const p=l.slice(5).trim(); if(p==="[DONE]")continue;
+        try{const d=JSON.parse(p).choices?.[0]?.delta||{}; if(d.reasoning_content)reasoning+=d.reasoning_content; if(d.content)answer+=d.content;}catch{}
+      }
+      render(out,answer,reasoning); log.scrollTop=log.scrollHeight;
+    }
+    msgs.push({role:"assistant",content:answer}); store.set("msgs",msgs);
+  }catch(err){ out.replaceChildren(el("span","err",String(err.message||err))); msgs.pop(); store.set("msgs",msgs); }
+  send.disabled=false; q.focus();
+};
+if("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(()=>{});
+</script>
+</body>
+</html>
