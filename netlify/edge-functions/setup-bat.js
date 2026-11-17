@@ -2,5 +2,6 @@
 export default async (req, context) => {
   const res = await context.next();
   const text = (await res.text()).replaceAll("https://nemotron-ultra-chat.netlify.app", new URL(req.url).origin);
-  return new Response(text, { headers: res.headers });
+  const headers = new Headers(res.headers); headers.delete("content-length");
+  return new Response(text, { headers });
 };
